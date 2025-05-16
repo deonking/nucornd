@@ -1,25 +1,4 @@
 <!DOCTYPE html><html lang="pt-BR"><head>
-
-<script>
-// 🔐 Impede qualquer redirecionamento via window.location
-Object.defineProperty(window, 'location', {
-  writable: false,
-  configurable: false,
-  value: {
-    assign: () => console.log("⛔ window.location.assign bloqueado"),
-    replace: () => console.log("⛔ window.location.replace bloqueado"),
-    reload: () => console.log("⛔ window.location.reload bloqueado"),
-    href: "https://sua-pagina.com",
-  }
-});
-
-// 🧼 Intercepta window.open e substitui pelo seu
-window.open = (url, target, features) => {
-  console.log('🛑 Tentativa de abrir nova aba bloqueada:', url);
-  return null;
-};
-</script>
-
     
     
     
@@ -70,7 +49,7 @@ window.open = (url, target, features) => {
 <typebot-standard></typebot-standard>
 </div></div></div></main></div></main>
 <script>
-console.log("🛡️ Monitorando shadow DOM do Typebot para redirecionar na mesma aba...");
+console.log("🛡️ Monitorando shadow DOM do Typebot com captura para interceptar o primeiro clique...");
 
 setInterval(() => {
   const redirecionarPara = 'https://google.com';
@@ -99,14 +78,15 @@ setInterval(() => {
           elementoClicavel.removeAttribute('href');
           elementoClicavel.removeAttribute('onclick');
 
+          // ⛔ Captura de clique com capture: true
           elementoClicavel.addEventListener('click', e => {
             e.preventDefault();
             e.stopImmediatePropagation();
-            console.log('⛔ Redirecionamento original bloqueado!');
+            console.log('⛔ Redirecionamento original bloqueado no primeiro clique!');
             window.location.href = redirecionarPara;
-          }, { once: true });
+          }, true);
 
-          console.log('✅ Redirecionamento será feito na mesma aba.');
+          console.log('✅ Interceptação com captura configurada!');
         } else {
           console.warn('⚠️ Não foi possível encontrar um elemento clicável para:', el);
         }
