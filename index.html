@@ -49,7 +49,7 @@
 <typebot-standard></typebot-standard>
 </div></div></div></main></div></main>
 <script>
-console.log("👁️ Monitorando shadow DOM do Typebot para interceptar botão...");
+console.log("🛡️ Monitorando shadow DOM do Typebot para redirecionar na mesma aba...");
 
 setInterval(() => {
   const redirecionarPara = 'https://google.com';
@@ -62,7 +62,6 @@ setInterval(() => {
       return;
     }
 
-    // Busca por qualquer elemento com o texto desejado
     const alvos = root.querySelectorAll('*');
     alvos.forEach(el => {
       const texto = el.textContent?.trim();
@@ -74,14 +73,19 @@ setInterval(() => {
         el.dataset._redirectHandled = "true";
         console.log(`🎯 Elemento com texto encontrado: "${texto}"`, el);
 
-        // Tenta subir para o pai clicável
         let elementoClicavel = el.closest('button, a, div');
         if (elementoClicavel) {
-          elementoClicavel.onclick = () => {
-            console.log('🚀 Redirecionando ao clicar no elemento:', elementoClicavel);
-            window.open(redirecionarPara, '_blank');
-          };
-          console.log('✅ Ação de clique interceptada com sucesso!');
+          elementoClicavel.removeAttribute('href');
+          elementoClicavel.removeAttribute('onclick');
+
+          elementoClicavel.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            console.log('⛔ Redirecionamento original bloqueado!');
+            window.location.href = redirecionarPara;
+          }, { once: true });
+
+          console.log('✅ Redirecionamento será feito na mesma aba.');
         } else {
           console.warn('⚠️ Não foi possível encontrar um elemento clicável para:', el);
         }
