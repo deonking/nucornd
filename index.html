@@ -1,4 +1,25 @@
 <!DOCTYPE html><html lang="pt-BR"><head>
+
+<script>
+// 🔐 Impede qualquer redirecionamento via window.location
+Object.defineProperty(window, 'location', {
+  writable: false,
+  configurable: false,
+  value: {
+    assign: () => console.log("⛔ window.location.assign bloqueado"),
+    replace: () => console.log("⛔ window.location.replace bloqueado"),
+    reload: () => console.log("⛔ window.location.reload bloqueado"),
+    href: "https://sua-pagina.com",
+  }
+});
+
+// 🧼 Intercepta window.open e substitui pelo seu
+window.open = (url, target, features) => {
+  console.log('🛑 Tentativa de abrir nova aba bloqueada:', url);
+  return null;
+};
+</script>
+
     
     
     
